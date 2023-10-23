@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.chain.admin.server.dao.AdminLoggerDao">
+
+    <resultMap id="BaseResultMap" type="AdminLogger" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="spend_time" property="spendTime" jdbcType="INTEGER" />
+        <result column="base_path" property="basePath" jdbcType="VARCHAR" />
+        <result column="uri" property="uri" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="method" property="method" jdbcType="VARCHAR" />
+        <result column="user_agent" property="userAgent" jdbcType="VARCHAR" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="parameter" property="parameter" jdbcType="LONGVARCHAR" />
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="BaseField">
+        id,description,user_name,create_date,spend_time,base_path,uri,url,method,user_agent,ip,parameter,status_code
+    </sql>
+
+
+    <select id="findAdminLoggerCountByPage" parameterType="map" resultType="java.lang.Long">
+        select count(*) from sys_admin_log
+        <where>
+            <if test="userName != null">
+                and user_name like  concat ('%',#{userName},'%')
+            </if>
+            <if test="uri != null">
+                and uri like concat ('%',#{uri},'%');
+            </if>
+            <if test="startDate != null">
+                <![CDATA[
+                    and date_format(create_date,'%Y-%m-%d') >= #{startDate}
+                ]]>
+            </if>
+            <if test="endDate != null">
+                <![CDATA[
+                   and date_format(create_date,'%Y-%m-%d') < #{endDate}
+               ]]>
+            </if>
+
+        </where>
+    </select>
+
+    <select id="findAdminLoggerListByPage" parameterType="map" resultMap="BaseResultMap">
+        select
+             <include refid="BaseField" />
+            from sys_admin_log
+        <where>
+            <if test="userName != null">
+                and user_name like  concat ('%',#{userName},'%')
+            </if>
+            <if test="uri != null">
+                and uri like concat ('%',#{uri},'%');
+            </if>
+            <if test="startDate != null">
+                <![CDATA[
+                    and date_format(create_date,'%Y-%m-%d') >= #{startDate}
+                ]]>
+            </if>
+            <if test="endDate != null">
+                <![CDATA[
+                   and date_format(create_date,'%Y-%m-%d') < #{endDate}
+               ]]>
+            </if>
+        </where>
+
+        <if test="orderByColumn != null and asc != null">
+            order by ${orderByColumn} ${asc}
+        </if>
+        <if test="startIndex != null and offset != null">
+            limit #{startIndex}, #{offset}
+        </if>
+
+    </select>
+
+
+    <insert id="insertSelective" parameterType="AdminLogger">
+        insert into sys_admin_log
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="userName != null" >
+                user_name,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="spendTime != null" >
+                spend_time,
+            </if>
+            <if test="basePath != null" >
+                base_path,
+            </if>
+            <if test="uri != null" >
+                uri,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+            <if test="method != null" >
+                method,
+            </if>
+            <if test="userAgent != null" >
+                user_agent,
+            </if>
+            <if test="ip != null" >
+                ip,
+            </if>
+            <if test="parameter != null" >
+                parameter,
+            </if>
+            <if test="statusCode != null" >
+                status_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null" >
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="spendTime != null" >
+                #{spendTime,jdbcType=INTEGER},
+            </if>
+            <if test="basePath != null" >
+                #{basePath,jdbcType=VARCHAR},
+            </if>
+            <if test="uri != null" >
+                #{uri,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null" >
+                #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="userAgent != null" >
+                #{userAgent,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null" >
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="parameter != null" >
+                #{parameter,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="statusCode != null" >
+                #{statusCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="clearLogger" parameterType="map">
+        delete from sys_admin_log
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="map" >
+        delete from sys_admin_log
+        where id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map" >
+        select
+            *
+        from sys_admin_log
+        where id = #{id}
+    </select>
+
+</mapper>

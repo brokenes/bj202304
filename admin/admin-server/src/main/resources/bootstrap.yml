@@ -1,0 +1,39 @@
+server:
+  port: 8082
+spring:
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: localhost:8848
+        namespace: df96bd4c-35a2-44f1-ae71-f3c61473b398
+        group: DEFAULT_GROUP
+      config:
+        group: DEFAULT_GROUP
+        server-addr: localhost:8848
+        namespace: df96bd4c-35a2-44f1-ae71-f3c61473b398
+        file-extension: yml
+        enabled: true
+  application:
+    name: admin-server
+  profiles:
+    active: local
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        exclude: 'health,info'
+  health:
+    redis:
+      enabled: false
+logging:
+  level:
+    root: info
+    com.github.chain.admin.server.dao: debug
+  file:
+    path: /Users/cavlinlee/data/logs/
+
+log_dir: /Users/cavlinlee/data/logs/${spring.application.name}

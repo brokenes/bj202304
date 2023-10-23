@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.chain.admin.server.dao.RoleDao">
+
+
+    <resultMap id="BaseResultMap" type="Role">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="INTEGER" />
+        <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+
+    </resultMap>
+
+
+    <select id="findRoleByRoleIds" resultMap="BaseResultMap">
+        select  * from  sys_role
+        <where>
+            <if test="roleIds != null">
+                id in
+                  <foreach collection="roleIds" item="roleId" index="index" open="(" separator="," close=")">
+                       #{roleId}
+                  </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="findRoleCountByPage" parameterType="map" resultType="java.lang.Long">
+        select count(*) from sys_role
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="title != null">
+                and title like concat ('%',#{title},'%')
+            </if>
+            <if test="name != null">
+                and name like concat ('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findRoleListByPage" resultMap="BaseResultMap" parameterType="map">
+        select * from sys_role
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="title != null">
+                and title like concat ('%',#{title},'%')
+            </if>
+            <if test="name != null">
+                and name like concat ('%',#{name},'%')
+            </if>
+        </where>
+        <if test="orderByColumn != null and asc != null">
+            order by ${orderByColumn} ${asc}
+        </if>
+        <if test="startIndex != null and offset != null">
+            limit #{startIndex}, #{offset}
+        </if>
+    </select>
+
+
+    <insert id="insertSelective" parameterType="Role">
+        insert into sys_role (title,name,remark,create_date,update_date,create_by,update_by,status)
+        values (#{title},#{name},#{remark},#{createDate},#{updateDate},#{createBy},#{updateBy},#{status})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="Role" >
+        update sys_role
+        <set >
+            <if test="title != null" >
+                title = #{title},
+            </if>
+            <if test="name != null" >
+                name = #{name},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark},
+            </if>
+            <if test="updateDate != null" >
+                update_date = #{updateDate},
+            </if>
+            <if test="updateBy != null" >
+                create_by = #{updateBy},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findRoleById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from  sys_role where id = #{id}
+    </select>
+
+
+    <update id="updateRoleStatusByIds">
+        update sys_role
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        <where>
+            <if test="ids != null">
+                id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteRoleById" parameterType="java.lang.Long">
+        delete from sys_role where id = #{id}
+    </delete>
+
+</mapper>
