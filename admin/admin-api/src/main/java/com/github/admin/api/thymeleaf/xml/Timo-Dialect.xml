@@ -23,12 +23,12 @@
         xmlns="http://www.thymeleaf.org/extras/dialect"
         prefix="mo"
         namespace-uri="https://github.com/"
-        class="com.github.chain.admin.api.thymeleaf.TimoDialect">
+        class="com.github.admin.api.thymeleaf.TimoDialect">
 
 
 
     <!-- 自定义对象工具 -->
-    <expression-object name="pageUtil" class="com.github.chain.admin.api.utils.PageUtil"/>
+    <expression-object name="pageUtil" class="com.github.admin.api.utils.PageUtil"/>
 <!--    <expression-object name="dicts" class="com.linln.component.thymeleaf.utility.DictUtil"/>-->
 
 

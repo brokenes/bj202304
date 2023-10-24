@@ -1,7 +1,7 @@
 package com.github.admin.api.shiro.manage;
 
 import com.github.admin.api.shiro.real.AuthRealm;
-import com.github.admin.common.domain.UserEntity;
+import com.github.admin.common.domain.User;
 import com.github.admin.common.utils.EntityBeanUtil;
 import com.github.admin.common.utils.ShiroUtil;
 import org.apache.shiro.authc.AuthenticationException;
@@ -32,11 +32,11 @@ public class RememberMeManager extends CookieRememberMeManager {
     protected byte[] serialize(PrincipalCollection principals) {
 
         // 获取用户信息
-        UserEntity user = (UserEntity) principals.getPrimaryPrincipal();
+        User user = (User) principals.getPrimaryPrincipal();
 
         // 克隆一个Principal对象，隐藏用户密码及密码盐，消除部门及角色数据
         String[] ignores = {"password", "salt", "dept", "roles"};
-        UserEntity principal = (UserEntity) EntityBeanUtil.cloneBean(user, ignores);
+        User principal = (User) EntityBeanUtil.cloneBean(user, ignores);
 
         // 二次加密用户密码
         String password = ShiroUtil.encrypt(user.getPassword(), user.getSalt());
@@ -59,7 +59,7 @@ public class RememberMeManager extends CookieRememberMeManager {
 
         // 获取“记住我”缓存中的用户对象
         PrincipalCollection collection = super.deserialize(extSerializeData(serializedIdentity));
-        UserEntity principal = (UserEntity) collection.getPrimaryPrincipal();
+        User principal = (User) collection.getPrimaryPrincipal();
 
         // 提取二次加密密码盐数据
         byte[] encrypt = new byte[ENCRYPT_LENGTH];

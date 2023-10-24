@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableTransactionManagement
-@MapperScan("com.github.chain.admin.server.dao")
+@MapperScan("com.github.admin.server.dao")
 @Slf4j
 public class AdminServerApplication {
 

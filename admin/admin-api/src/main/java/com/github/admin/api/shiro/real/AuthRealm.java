@@ -1,9 +1,12 @@
 package com.github.admin.api.shiro.real;
 
+import com.github.admin.client.RoleServiceClient;
+import com.github.admin.client.UserServiceClient;
 import com.github.admin.common.constants.AdminConstants;
-import com.github.admin.common.domain.UserEntity;
+import com.github.admin.common.domain.User;
 import com.github.admin.common.enums.AdminErrorMsgEnum;
 import com.github.admin.common.utils.ShiroUtil;
+import com.github.framework.core.Result;
 import com.github.framework.core.exception.Ex;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
@@ -12,20 +15,22 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.codec.CodecSupport;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 
 public class AuthRealm extends AuthorizingRealm {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthRealm.class);
 
-   /* @Resource
+    @Resource
     private UserServiceClient userServiceClient;
     @Resource
-    private RoleServiceClient roleServiceClient;*/
+    private RoleServiceClient roleServiceClient;
 
     /**
      * 授权逻辑
@@ -34,7 +39,7 @@ public class AuthRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         // 获取用户Principal对象
-        UserEntity user = (UserEntity) principal.getPrimaryPrincipal();
+        User user = (User) principal.getPrimaryPrincipal();
 
         if (user == null) {
             throw new UnknownAccountException();
@@ -76,9 +81,9 @@ public class AuthRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         // 获取数据库中的用户名密码
-       /* Result<UserEntity> result = userServiceClient.findUserByUserName(token.getUsername());
+        Result<User> result = userServiceClient.findUserByUserName(token.getUsername());
         if (result.isSuccess()) {
-            UserEntity user = result.getData();
+            User user = result.getData();
             // 判断用户名是否存在
             if (user == null) {
                 throw new UnknownAccountException();
@@ -87,14 +92,14 @@ public class AuthRealm extends AuthorizingRealm {
             }
             // 对盐进行加密处理
             ByteSource salt = ByteSource.Util.bytes(user.getSalt());
-            *//* 传入密码自动判断是否正确
-             * 参数1：传入对象给Principal
-             * 参数2：正确的用户密码
-             * 参数3：加盐处理
-             * 参数4：固定写法
-             *//*
+//             传入密码自动判断是否正确
+//             * 参数1：传入对象给Principal
+//             * 参数2：正确的用户密码
+//             * 参数3：加盐处理
+//             * 参数4：固定写法
+
             return new SimpleAuthenticationInfo(user, user.getPassword(), salt, getName());
-         }*/
+         }
 
          throw Ex.business(AdminErrorMsgEnum.USER_AUTHENTICATION_FAIL);
     }

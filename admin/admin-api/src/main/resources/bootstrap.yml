@@ -6,18 +6,18 @@ spring:
       discovery:
         enabled: true
         server-addr: localhost:8848
-        namespace: df96bd4c-35a2-44f1-ae71-f3c61473b398
+        namespace: 1d3e5524-b570-4dad-972d-d2cb3c02554f
         group: DEFAULT_GROUP
       config:
         group: DEFAULT_GROUP
         server-addr: localhost:8848
-        namespace: df96bd4c-35a2-44f1-ae71-f3c61473b398
+        namespace: 1d3e5524-b570-4dad-972d-d2cb3c02554f
         file-extension: yml
         enabled: true
   application:
     name: admin-api
   profiles:
-    active: local
+    active: bj202304
   messages:
     basename: i18n/admin
   main:

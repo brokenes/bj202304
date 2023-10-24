@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.chain.admin.server.dao.MenuDao">
+<mapper namespace="com.github.admin.server.dao.MenuDao">
 
     <resultMap id="BaseResultMap" type="Menu">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -23,107 +23,17 @@
 
     </resultMap>
 
-    <select id="findMenuByMenuIds" resultMap="BaseResultMap">
-            select * from sys_menu
-            <where>
-                <if test="menuIds != null">
-                    id in
-                    <foreach collection="menuIds" item="menuId" index="index" open="(" separator="," close=")">
-                        #{menuId}
-                    </foreach>
-                </if>
-            </where>
-
-    </select>
-
-    <select id="findMenuList" parameterType="map" resultMap="BaseResultMap">
-        select * from  sys_menu
+    <select id="findByMenuIds" resultMap="BaseResultMap">
+        select * from sys_menu
         <where>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="title != null">
-                and title like concat ('%',#{title},'%')
-            </if>
-            <if test="url != null">
-                and url like concat ('%',#{url},'%')
+            <if test="menuIds != null">
+                id in
+                <foreach collection="menuIds" item="menuId" index="index" open="(" separator="," close=")">
+                    #{menuId}
+                </foreach>
             </if>
         </where>
-        order by sort asc
+
     </select>
-
-    <select id="findMenuListSortByPid" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select * from  sys_menu where pid = #{pid} order by sort asc
-    </select>
-
-    <select id="findMenuListSortByPidAndNotId" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select * from  sys_menu where pid = #{pid} and id != #{id} order by sort asc
-    </select>
-
-    <select id="findMenuById" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select * from  sys_menu where id = #{id}
-    </select>
-    
-    
-    <update id="updateSelective" parameterType="Menu">
-        update sys_menu
-        <set>
-            <if test="title != null">
-                title = #{title},
-            </if>
-            <if test="pid != null">
-                pid = #{pid},
-            </if>
-            <if test="pids != null">
-                pids = #{pids},
-            </if>
-            <if test="url != null">
-                url = #{url},
-            </if>
-            <if test="perms != null">
-                perms = #{perms},
-            </if>
-            <if test="icon != null">
-                icon = #{icon},
-            </if>
-            <if test="type != null">
-                type = #{type},
-            </if>
-            <if test="sort != null">
-                sort = #{sort},
-            </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="createDate != null">
-                create_date = #{createDate},
-            </if>
-            <if test="updateDate != null">
-                update_date = #{updateDate},
-            </if>
-            <if test="createBy != null">
-                create_by = #{createBy},
-            </if>
-            <if test="updateBy != null">
-                update_by = #{updateBy},
-            </if>
-            <if test="status != null">
-                status = #{status},
-            </if>
-        </set>
-        where id = #{id}
-    </update>
-
-
-    <insert id="insertSelective" parameterType="Menu">
-        insert into sys_menu (title, pid, pids, url, perms, icon, type, sort, remark, create_date, update_date,
-                              create_by, update_by, status)
-        values (#{title}, #{pid}, #{pids}, #{url}, #{perms}, #{icon}, #{type}, #{sort}, #{remark}, #{createDate},
-                #{updateDate}, #{createBy}, #{updateBy}, #{status})
-    </insert>
-
-    <delete id="deleteMenuById" parameterType="java.lang.Long">
-        delete from sys_menu where id = #{id}
-    </delete>
 
 </mapper>
