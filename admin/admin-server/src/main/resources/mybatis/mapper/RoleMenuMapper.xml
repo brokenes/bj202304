@@ -9,6 +9,12 @@
         <result column="role_id" property="roleId" jdbcType="INTEGER" />
     </resultMap>
 
+
+    <select id="findByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select * from sys_role_menu where role_id = #{roleId}
+    </select>
+
+
     <select id="findByRoleIds" resultMap="BaseResultMap">
         select  * from  sys_role_menu
         <where>

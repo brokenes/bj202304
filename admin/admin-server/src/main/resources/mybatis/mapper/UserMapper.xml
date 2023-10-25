@@ -28,4 +28,80 @@
         select * from sys_user where  username = #{userName}
     </select>
 
+    <select id="pageUserCount" resultType="java.lang.Long">
+        select count(*) from sys_user
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="userName != null">
+                and username like concat ('%',#{userName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageUserList" resultMap="BaseResultMap" parameterType="map">
+        select * from sys_user
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="userName != null">
+                and username like concat ('%',#{userName},'%')
+            </if>
+        </where>
+        <if test="orderByColumn != null and asc != null">
+            order by ${orderByColumn} ${asc}
+        </if>
+        <if test="startIndex != null and offset != null">
+            limit #{startIndex}, #{offset}
+        </if>
+    </select>
+
+    <insert id="insertSelective" parameterType="User">
+        insert  into sys_user(username,nickname,password,salt,picture,sex,phone,email,create_date,update_date,remark,status)
+        values (#{userName},#{nickName},#{password},#{salt},#{picture},#{sex},#{phone},#{email},#{createDate},#{updateDate},#{remark},#{status})
+    </insert>
+
+    <update id="updateSelective" parameterType="User">
+        update sys_user
+        <set>
+            <if test="userName != null">
+                username = #{userName},
+            </if>
+            <if test="nickName != null">
+                nickname = #{nickName},
+            </if>
+            <if test="picture != null">
+                picture = #{picture},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.github.admin.server.controller;
 
 
+import com.github.admin.common.domain.Role;
 import com.github.admin.server.service.RoleService;
 import com.github.framework.core.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Set;
 
 @RestController
 @Slf4j
@@ -23,5 +25,11 @@ public class RoleController {
     Result<Boolean> findRoleByUserId(@PathVariable("userId") Long userId){
         return roleServiceImpl.findRoleByUserId(userId);
     }
+
+    @GetMapping("/findRolePermissionsByUserId/{userId}")
+    Result<Set<Role>> findRolePermissionsByUserId(Long userId){
+        return roleServiceImpl.findRolePermissionsByUserId(userId);
+    }
+
 
 }

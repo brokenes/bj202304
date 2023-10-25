@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RoleMenuDao {
     List<RoleMenu> findByRoleIds(@Param("roleIds") List<Long> roleIds);
+
+    List<RoleMenu> findByRoleId(Long roleId);
 }

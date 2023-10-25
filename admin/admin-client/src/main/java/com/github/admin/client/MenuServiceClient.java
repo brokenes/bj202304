@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.TreeMap;
 
-@FeignClient(value = "admin-server")
+@FeignClient(value = "admin-server",url = "http://127.0.0.1:8084")
 @RestController
 public interface MenuServiceClient {
 

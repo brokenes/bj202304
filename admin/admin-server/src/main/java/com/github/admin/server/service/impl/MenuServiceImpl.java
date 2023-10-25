@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -21,17 +22,13 @@ public class MenuServiceImpl implements MenuService {
 
     @Resource
     private UserDao userDao;
-
     @Resource
     private RoleDao roleDao;
-
     @Resource
     private UserRoleDao userRoleDao;
 
-
     @Resource
     private RoleMenuDao roleMenuDao;
-
     @Resource
     private MenuDao menuDao;
 
@@ -43,9 +40,13 @@ public class MenuServiceImpl implements MenuService {
         }
 
         User user = userDao.findByUserId(userId);
-        if(user == null || !user.getStatus().equals(AdminConstants.START_STATUS)){
+        if(user == null){
             log.error("查询当前用户不存在或该用户停用,userId:{}",userId);
             return Result.fail(AdminErrorMsgEnum.USER_IS_NOT_EXIST);
+        }
+        if(!user.getStatus().equals(AdminConstants.START_STATUS)){
+            log.error("查询当前用户停用,userId:{}",userId);
+            return Result.fail(AdminErrorMsgEnum.USER_STATUS_IS_DISABLE);
         }
 
         List<UserRole> userRoleList = userRoleDao.findByUserId(userId);
@@ -53,11 +54,7 @@ public class MenuServiceImpl implements MenuService {
             log.error("当前根据用户id查询对应的用户角色数据不存在,userId:{},userName:{}",user.getId(),user.getUserName());
             return Result.fail(AdminErrorMsgEnum.USER_IS_NOT_INCLUDE_ROLE);
         }
-        List<Long> roleIdsList = new ArrayList<Long>();
-        userRoleList.stream().forEach(u->{
-            roleIdsList.add(u.getRoleId());
-        });
-
+        List<Long> roleIdsList = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         List<Role> roleList = roleDao.findByRoleIds(roleIdsList);
         List<Long> roleIdItemsList = new ArrayList<Long>();
         if(CollectionUtils.isEmpty(roleList)){

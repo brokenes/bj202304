@@ -3,11 +3,13 @@ package com.github.admin.api.shiro.real;
 import com.github.admin.client.RoleServiceClient;
 import com.github.admin.client.UserServiceClient;
 import com.github.admin.common.constants.AdminConstants;
+import com.github.admin.common.domain.Role;
 import com.github.admin.common.domain.User;
 import com.github.admin.common.enums.AdminErrorMsgEnum;
 import com.github.admin.common.utils.ShiroUtil;
 import com.github.framework.core.Result;
 import com.github.framework.core.exception.Ex;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Set;
 
 
 public class AuthRealm extends AuthorizingRealm {
@@ -54,7 +57,7 @@ public class AuthRealm extends AuthorizingRealm {
             return info;
         }
 //
-       /* // 赋予角色和资源授权
+        // 赋予角色和资源授权
         Result<Set<Role>> result = roleServiceClient.findRolePermissionsByUserId(userId);
         if(result.isSuccess()){
             Set<Role> roles = result.getData();
@@ -69,7 +72,7 @@ public class AuthRealm extends AuthorizingRealm {
                     });
         } else {
             throw new UnknownAccountException();
-        }*/
+        }
         return info;
 
     }
