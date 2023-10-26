@@ -29,4 +29,26 @@ public class UserController {
     Result saveUser(@RequestBody UserRequest userRequest){
         return userServiceImpl.saveUser(userRequest);
     }
+
+
+    @GetMapping("/findUserById/{id}")
+    Result<User> findUserById(@PathVariable("id")Long id){
+        return  userServiceImpl.findUserById(id);
+    }
+
+
+    @PostMapping("/updateUser")
+    Result<Integer> updateUser(@RequestBody UserRequest userRequest){
+        return  userServiceImpl.updateUser(userRequest);
+    }
+
+    @GetMapping("/roleAssignmentById/{id}")
+    Result<User> roleAssignmentById(@PathVariable("id") Long id){
+        return userServiceImpl.roleAssignmentById(id);
+    }
+
+    @PostMapping("/authUserRole")
+    Result<Integer> authUserRole(@RequestBody UserRequest userRequest){
+        return  userServiceImpl.authUserRole(userRequest);
+    }
 }

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public interface UserServiceClient {
 
+    @GetMapping("/findUserById/{id}")
+    Result<User> findUserById(@PathVariable("id")Long id);
+
     @GetMapping("/findUserByUserName")
     Result<User> findUserByUserName(@RequestParam("username") String username);
 
@@ -20,4 +23,15 @@ public interface UserServiceClient {
 
     @PostMapping("/saveUser")
     Result saveUser(@RequestBody UserRequest userRequest);
+
+    @PostMapping("/updateUser")
+    Result<Integer> updateUser(@RequestBody UserRequest userRequest);
+
+
+    @GetMapping("/roleAssignmentById/{id}")
+    Result<User> roleAssignmentById(@PathVariable("id") Long id);
+
+    @PostMapping("/authUserRole")
+    Result<Integer> authUserRole(@RequestBody UserRequest userRequest);
+
 }

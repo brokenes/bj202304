@@ -2,6 +2,7 @@ package com.github.admin.api.controller;
 
 import com.github.admin.client.UserServiceClient;
 import com.github.admin.common.domain.User;
+import com.github.admin.common.group.UpdateGroup;
 import com.github.admin.common.group.UserGroup;
 import com.github.admin.common.request.UserRequest;
 import com.github.framework.core.Result;
@@ -10,11 +11,10 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,5 +54,50 @@ public class UserController {
     public Result add(@Validated(value = UserGroup.AddGroup.class) UserRequest userRequest){
         return userServiceClient.saveUser(userRequest);
     }
+
+
+    @GetMapping("/system/user/edit/{id}")
+    @RequiresPermissions("system:user:edit")
+    public String edit(@PathVariable("id") Long id,Model model){
+        Result<User> result = userServiceClient.findUserById(id);
+        if(result.isSuccess()){
+            model.addAttribute("user",result.getData());
+        }
+        return "/manager/user/edit";
+    }
+
+
+    @PostMapping("/system/user/edit")
+    @RequiresPermissions("system:user:edit")
+    @ResponseBody
+    public Result update(@Validated(value = UpdateGroup.class) UserRequest userRequest){
+        return  userServiceClient.updateUser(userRequest);
+
+    }
+
+
+    @GetMapping("/system/user/role")
+    @RequiresPermissions("system:user:role")
+    public String auth(@RequestParam("ids")Long id, Model model){
+        Result<User> result = userServiceClient.roleAssignmentById(id);
+        if(result.isSuccess()){
+            User user = result.getData();
+            model.addAttribute("id",user.getId());
+            model.addAttribute("authRoles",user.getAuthSet());
+            model.addAttribute("list",user.getList());
+        }
+        return "/manager/user/role";
+    }
+
+    @PostMapping("/system/user/role")
+    @RequiresPermissions("system:user:role")
+    @ResponseBody
+    public Result auth(@NotNull(message="id不能为空")@RequestParam(value = "id",required = false)Long id, @RequestParam(value = "roleId",required = false)List<Long> roleId){
+        UserRequest userRequest = new UserRequest();
+        userRequest.setId(id);
+        userRequest.setRoleIds(roleId);
+        return userServiceClient.authUserRole(userRequest);
+    }
+
 
 }

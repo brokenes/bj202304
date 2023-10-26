@@ -11,6 +11,7 @@ import com.github.framework.core.Result;
 import com.github.framework.core.page.DataPage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -91,5 +92,50 @@ public class UserServiceImpl implements UserService {
             return Result.fail(AdminErrorMsgEnum.OPERATION_FAIL);
         }
         return Result.ok();
+    }
+
+
+    @Override
+    public Result<User> findUserById(Long id) {
+        if(id == null){
+            log.error("查询用户数据id为空");
+            return Result.fail(AdminErrorMsgEnum.REQUEST_PARAMS_EMPTY);
+        }
+        User user = userDao.findByUserId(id);
+        return Result.ok(user);
+    }
+
+    @Override
+    public Result<Integer> updateUser(UserRequest userRequest) {
+        if(userRequest == null || userRequest.getId() == null){
+            log.error("修改用户信息id参数为空");
+            return Result.fail(AdminErrorMsgEnum.REQUEST_PARAMS_EMPTY);
+        }
+        Long userId = userRequest.getId();
+        User user = userDao.findByUserId(userId);
+        if(user == null){
+            log.error("当前修改用户不存在,userId:{}",userId);
+            return Result.fail(AdminErrorMsgEnum.USER_IS_NOT_EXIST);
+        }
+
+        User updateUser = new User();
+        BeanUtils.copyProperties(userRequest,updateUser);
+        updateUser.setUpdateDate(new Date());
+        Integer status = userDao.updateSelective(updateUser);
+        if(status != 1){
+            log.error("更新用户失败,userId:{}",userId);
+            return Result.fail(AdminErrorMsgEnum.OPERATION_FAIL);
+        }
+        return Result.ok(status);
+    }
+
+    @Override
+    public Result<User> roleAssignmentById(Long id) {
+        return null;
+    }
+
+    @Override
+    public Result<Integer> authUserRole(UserRequest userRequest) {
+        return null;
     }
 }
