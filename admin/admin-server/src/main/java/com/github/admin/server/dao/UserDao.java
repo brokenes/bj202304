@@ -14,4 +14,6 @@ public interface UserDao {
     long pageUserCount(Map<String, Object> map);
 
     List<User> pageUserList(Map<String, Object> map);
+
+    int insertSelective(User user);
 }

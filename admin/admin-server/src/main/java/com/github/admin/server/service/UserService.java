@@ -10,4 +10,6 @@ public interface UserService {
     Result<User> findByUserName(String userName);
 
     Result<DataPage<User>> findUserByPage(UserRequest userRequest);
+
+    Result saveUser(UserRequest userRequest);
 }

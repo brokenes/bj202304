@@ -30,6 +30,11 @@ public enum AdminErrorMsgEnum implements IError {
 
     MENU_IS_NOT_EXIST("10000_00001_10450","当前菜单不存在"),
 
+    PASSWORD_IS_NOT_SAME("10000_00001_10451","密码和确认密码不一致"),
+
+    OPERATION_FAIL("10000_00001_10452","操作失败"),
+
+    USER_IS_EXIST("10000_00001_10453","当前用户已存在"),
 
     ;
 

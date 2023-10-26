@@ -18,4 +18,6 @@ public interface UserServiceClient {
     @PostMapping("/findUserByPage")
     Result<DataPage<User>> findUserByPage(@RequestBody UserRequest userRequest);
 
+    @PostMapping("/saveUser")
+    Result saveUser(@RequestBody UserRequest userRequest);
 }

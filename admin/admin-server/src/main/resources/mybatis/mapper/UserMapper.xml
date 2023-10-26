@@ -37,6 +37,9 @@
             <if test="userName != null">
                 and username like concat ('%',#{userName},'%')
             </if>
+            <if test="nickName != null">
+                and nickname like concat ('%',#{nickName},'%')
+            </if>
         </where>
     </select>
 
@@ -48,6 +51,9 @@
             </if>
             <if test="userName != null">
                 and username like concat ('%',#{userName},'%')
+            </if>
+            <if test="nickName != null">
+                and nickname like concat ('%',#{nickName},'%')
             </if>
         </where>
         <if test="orderByColumn != null and asc != null">

@@ -2,6 +2,7 @@ package com.github.admin.api.controller;
 
 import com.github.admin.client.UserServiceClient;
 import com.github.admin.common.domain.User;
+import com.github.admin.common.group.UserGroup;
 import com.github.admin.common.request.UserRequest;
 import com.github.framework.core.Result;
 import com.github.framework.core.page.DataPage;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -38,5 +41,18 @@ public class UserController {
         return "/manager/user/index";
     }
 
+    @GetMapping("/system/user/add")
+    @RequiresPermissions("system:user:add")
+    public String add(){
+        return "/manager/user/add";
+    }
+
+
+    @PostMapping("/system/user/save")
+    @RequiresPermissions("system:user:add")
+    @ResponseBody
+    public Result add(@Validated(value = UserGroup.AddGroup.class) UserRequest userRequest){
+        return userServiceClient.saveUser(userRequest);
+    }
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.github.admin.common.domain.User;
 import com.github.admin.common.enums.AdminErrorMsgEnum;
 import com.github.admin.common.request.UserRequest;
+import com.github.admin.common.utils.ShiroUtil;
 import com.github.admin.server.dao.UserDao;
 import com.github.admin.server.service.UserService;
 import com.github.framework.core.Result;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +59,37 @@ public class UserServiceImpl implements UserService {
         dataPage.setTotalCount(totalCount);
         dataPage.setDataList(result);
         return Result.ok(dataPage);
+    }
+
+    @Override
+    public Result saveUser(UserRequest userRequest) {
+        String password = userRequest.getPassword();
+        String confirmPwd = userRequest.getConfirm();
+        String userName = userRequest.getUserName().trim();
+        if(!StringUtils.equals(password,confirmPwd)){
+            log.error("添加用户输入密码和确认密码不一致,password = {},confirmPwd = {}",password,confirmPwd);
+            return Result.fail(AdminErrorMsgEnum.PASSWORD_IS_NOT_SAME);
+        }
+
+        User existUser = userDao.findByUserName(userName);
+        if(existUser != null){
+            log.error("当前添加用户userName = {}已经存在",userName);
+            return Result.fail(AdminErrorMsgEnum.USER_IS_EXIST);
+        }
+        User user = new User();
+        BeanUtil.copyProperties(userRequest,user);
+        Date date = new Date();
+        String salt = ShiroUtil.getRandomSalt();
+        String pwd = ShiroUtil.encrypt(password,salt);
+        user.setCreateDate(date);
+        user.setUpdateDate(date);
+        user.setPassword(pwd);
+        user.setUserName(userName);
+        int result = userDao.insertSelective(user);
+        if(result != 1){
+            log.error("添加用户操作失败,result = {}",result);
+            return Result.fail(AdminErrorMsgEnum.OPERATION_FAIL);
+        }
+        return Result.ok();
     }
 }
