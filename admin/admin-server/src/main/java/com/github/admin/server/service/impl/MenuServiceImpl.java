@@ -1,5 +1,6 @@
 package com.github.admin.server.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.github.admin.common.constants.AdminConstants;
 import com.github.admin.common.domain.*;
 import com.github.admin.common.enums.AdminErrorMsgEnum;
@@ -102,5 +103,47 @@ public class MenuServiceImpl implements MenuService {
         }
         log.info("查询用户userId:{}对应的菜单集合treeMap:{}",userId,treeMenu);
         return Result.ok(treeMenu);
+    }
+
+    @Override
+    public Result<List<Menu>> roleMenuAuthList(Long id) {
+        if(id == null){
+            log.error("角色菜单授权请求角色id为空");
+            return Result.fail(AdminErrorMsgEnum.REQUEST_PARAMS_EMPTY);
+        }
+        Role role = roleDao.findRoleById(id);
+        if(role == null){
+            log.error("当前菜单授权角色roleId:{}对应角色不存在",id);
+            return Result.fail(AdminErrorMsgEnum.ROLE_IS_NOT_EXIST);
+        }
+        List<RoleMenu> roleMenuList = roleMenuDao.findByRoleId(id);
+        Set<Menu> menuSet = new HashSet<Menu>();
+        if(CollectionUtils.isNotEmpty(roleMenuList)){
+            log.error("差点角色菜单数据不存在,roleId:{}",id);
+            List<Long> menuIdsList = new ArrayList<Long>();
+
+            roleMenuList.stream().forEach(roleMenu ->{
+                menuIdsList.add(roleMenu.getMenuId());
+            });
+            log.info("角色菜单对应的菜单id集合数据,menuIdsList:{}",menuIdsList);
+            List<Menu> menuList = menuDao.findByMenuIds(menuIdsList);
+            if(CollectionUtils.isEmpty(menuList)){
+                log.error("角色roleId:{} 角色菜单集合menuIdsList:{}查询对应的菜单数据为空",id,menuIdsList);
+                return Result.fail(AdminErrorMsgEnum.MENU_IS_NOT_EXIST);
+            }
+            menuSet = menuList.stream().collect(Collectors.toSet());
+        }
+
+        List<Menu> allMenuList = menuDao.findByMenuIds(null);
+        for(Menu menu:allMenuList){
+            String remark = "-";
+            if(menuSet.contains(menu)){
+                remark = "auth:true";
+                menu.setRemark(remark);
+            }
+        }
+        role.setMenuList(allMenuList);
+        log.info("查询角色对应的菜单json数据:{}", JSON.toJSONString(role));
+        return Result.ok(allMenuList);
     }
 }

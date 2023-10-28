@@ -7,6 +7,8 @@ import com.github.framework.core.page.DataPage;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @FeignClient(value = "admin-server",url = "http://127.0.0.1:8084")
 @RestController
 public interface UserServiceClient {
@@ -28,10 +30,26 @@ public interface UserServiceClient {
     Result<Integer> updateUser(@RequestBody UserRequest userRequest);
 
 
+    @GetMapping("/deleteUserById/{id}")
+    Result<Integer> deleteUserById(@PathVariable("id") Long id);
+
+
+    @PostMapping ("/enableUserStatus")
+    Result<Integer> enableUserStatus(@RequestBody List<Long> ids);
+
+    @PostMapping("/disableUserStatus")
+    Result<Integer> disableUserStatus(@RequestBody List<Long> ids);
+
+    @PostMapping("/modifyUserPassword")
+    Result<Integer> modifyUserPassword(@RequestBody UserRequest userRequest);
+
     @GetMapping("/roleAssignmentById/{id}")
     Result<User> roleAssignmentById(@PathVariable("id") Long id);
 
     @PostMapping("/authUserRole")
     Result<Integer> authUserRole(@RequestBody UserRequest userRequest);
+
+    @PostMapping("/findUserByRoleId/{roleId}")
+    Result<List<User>> findUserByRoleId(@PathVariable("roleId")Long roleId);
 
 }

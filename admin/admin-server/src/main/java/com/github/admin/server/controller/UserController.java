@@ -8,6 +8,7 @@ import com.github.framework.core.page.DataPage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -42,6 +43,27 @@ public class UserController {
         return  userServiceImpl.updateUser(userRequest);
     }
 
+    @GetMapping("/deleteUserById/{id}")
+    Result<Integer> deleteUserById(@PathVariable("id") Long id){
+        return  userServiceImpl.deleteUserById(id);
+    }
+
+
+    @PostMapping ("/enableUserStatus")
+    Result<Integer> enableUserStatus(@RequestBody List<Long> ids){
+        return  userServiceImpl.enableUserStatus(ids);
+    }
+
+    @PostMapping("/disableUserStatus")
+    Result<Integer> disableUserStatus(@RequestBody List<Long> ids){
+        return  userServiceImpl.disableUserStatus(ids);
+    }
+
+    @PostMapping("/modifyUserPassword")
+    Result<Integer> modifyUserPassword(@RequestBody UserRequest userRequest){
+        return  userServiceImpl.modifyUserPassword(userRequest);
+    }
+
     @GetMapping("/roleAssignmentById/{id}")
     Result<User> roleAssignmentById(@PathVariable("id") Long id){
         return userServiceImpl.roleAssignmentById(id);
@@ -49,6 +71,11 @@ public class UserController {
 
     @PostMapping("/authUserRole")
     Result<Integer> authUserRole(@RequestBody UserRequest userRequest){
-        return  userServiceImpl.authUserRole(userRequest);
+        return userServiceImpl.authUserRole(userRequest);
+    }
+
+    @PostMapping("/findUserByRoleId/{roleId}")
+    Result<List<User>> findUserByRoleId(@PathVariable("roleId") Long roleId){
+        return userServiceImpl.findUserByRoleId(roleId);
     }
 }

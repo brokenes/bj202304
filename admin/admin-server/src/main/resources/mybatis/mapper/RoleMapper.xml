@@ -125,4 +125,8 @@
         delete from sys_role where id = #{id}
     </delete>
 
+    <select id="findByRoleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from  sys_role where id = #{id}
+    </select>
+
 </mapper>

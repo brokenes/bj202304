@@ -9,4 +9,11 @@ public interface RoleMenuDao {
     List<RoleMenu> findByRoleIds(@Param("roleIds") List<Long> roleIds);
 
     List<RoleMenu> findByRoleId(Long roleId);
+
+    Integer deleteRoleMenuByRoleId(Long roleId);
+
+    Integer insertSelective(RoleMenu roleMenu);
+
+    Integer deleteRoleMenuByMenuId(Long id);
+
 }

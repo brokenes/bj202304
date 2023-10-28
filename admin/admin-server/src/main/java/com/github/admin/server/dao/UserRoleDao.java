@@ -9,4 +9,9 @@ public interface UserRoleDao {
 
     List<UserRole> findByUserId(Long userId);
 
+    Integer deleteByUserId(Long id);
+
+    Integer insertSelective(UserRole userRole);
+
+    List<UserRole> findByRoleId(Long roleId);
 }

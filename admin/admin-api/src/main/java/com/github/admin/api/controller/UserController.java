@@ -4,6 +4,7 @@ import com.github.admin.client.UserServiceClient;
 import com.github.admin.common.domain.User;
 import com.github.admin.common.group.UpdateGroup;
 import com.github.admin.common.group.UserGroup;
+import com.github.admin.common.group.UserPasswordGroup;
 import com.github.admin.common.request.UserRequest;
 import com.github.framework.core.Result;
 import com.github.framework.core.page.DataPage;
@@ -76,9 +77,65 @@ public class UserController {
     }
 
 
+    /***
+     * 删除
+     * @param id
+     * @return
+     */
+    @GetMapping("/system/user/delete/{id}")
+    @RequiresPermissions("system:user:status")
+    @ResponseBody
+    public Result delete(@PathVariable("id")Long id){
+        return  userServiceClient.deleteUserById(id);
+    }
+
+
+    /**
+     * 用户启用
+     * @param ids
+     * @return
+     */
+    @PostMapping ("/system/user/status/start")
+    @RequiresPermissions("system:user:status")
+    @ResponseBody
+    public Result enableStatus(@RequestParam("ids")List<Long> ids){
+        return  userServiceClient.enableUserStatus(ids);
+    }
+
+    /***
+     * 用户停用
+     * @param ids
+     * @return
+     */
+    @PostMapping("/system/user/status/stop")
+    @RequiresPermissions("system:user:status")
+    @ResponseBody
+    public Result disableUserStatus(@RequestParam("ids") List<Long> ids){
+        return  userServiceClient.disableUserStatus(ids);
+    }
+
+
+    @RequiresPermissions("system:user:pwd")
+    @GetMapping("/system/user/pwd")
+    public String toModifyPwd(@RequestParam("ids")Long id, Model model){
+        model.addAttribute("id",id);
+        return "/manager/user/pwd";
+
+    }
+
+
+    @RequiresPermissions("system:user:pwd")
+    @PostMapping("/system/user/pwd")
+    @ResponseBody
+    public Result modifyUserPassword(@Validated(value = {UserPasswordGroup.class}) UserRequest userRequest){
+        return userServiceClient.modifyUserPassword(userRequest);
+
+    }
+
+
     @GetMapping("/system/user/role")
     @RequiresPermissions("system:user:role")
-    public String auth(@RequestParam("ids")Long id, Model model){
+    public String auth(@RequestParam("ids")Long id,Model model){
         Result<User> result = userServiceClient.roleAssignmentById(id);
         if(result.isSuccess()){
             User user = result.getData();
@@ -89,6 +146,7 @@ public class UserController {
         return "/manager/user/role";
     }
 
+
     @PostMapping("/system/user/role")
     @RequiresPermissions("system:user:role")
     @ResponseBody
@@ -97,6 +155,16 @@ public class UserController {
         userRequest.setId(id);
         userRequest.setRoleIds(roleId);
         return userServiceClient.authUserRole(userRequest);
+    }
+
+    @GetMapping("/system/user/detail/{id}")
+    @RequiresPermissions("system:user:detail")
+    public String detail(@PathVariable("id")Long id, Model model){
+        Result<User> result = userServiceClient.findUserById(id);
+        if(result.isSuccess()){
+            model.addAttribute("user",result.getData());
+        }
+        return "/manager/user/detail";
     }
 
 
