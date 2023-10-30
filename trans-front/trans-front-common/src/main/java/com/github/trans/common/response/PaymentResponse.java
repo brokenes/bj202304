@@ -1,5 +1,6 @@
 package com.github.trans.common.response;
 
+import com.github.framework.core.common.base.BaseResponse;
 import com.github.trans.common.annotation.Signature;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -8,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class PaymentResponse extends BaseResponse{
+public class PaymentResponse extends BaseResponse {
 
 
     @Signature(required = true, desc = "二维码")
