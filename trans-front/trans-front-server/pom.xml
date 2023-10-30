@@ -136,6 +136,16 @@
 
     <build>
         <plugins>
+            <!-- Maven的Mybatis生成器 -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.4.2</version>
+                <configuration>
+                    <overwrite>true</overwrite>
+                    <configurationFile>${basedir}/src/test/resources/mybatisGeneratorConfig.xml</configurationFile>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
