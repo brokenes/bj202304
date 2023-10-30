@@ -36,6 +36,9 @@ public enum AdminErrorMsgEnum implements IError {
 
     USER_IS_EXIST("10000_00001_10453","当前用户已存在"),
 
+    MENU_TYPE_CHOOSE_ERROR("10000_00001_10454","菜单类型选择错误"),
+
+
     ;
 
 

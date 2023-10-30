@@ -17,6 +17,7 @@ public class Menu implements Serializable {
     private String url;
     private String perms;
     private String icon;
+    //1:目录；2：菜单；3：按钮
     private Integer type;
     private Integer sort;
     private String remark;
