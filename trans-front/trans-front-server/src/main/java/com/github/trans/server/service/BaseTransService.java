@@ -18,30 +18,31 @@ public abstract class BaseTransService<T extends PaymentRequest,R extends BaseRe
     public Result<R> process(T request){
         log.info("执行流程请求参数,request = {}", JSON.toJSONString(request));
         //参数检测
-        Result result = checkPaymentParams(request);
+        Result result = verifyParams(request);
         if(!result.isSuccess()){
             String code = result.getCode();
             String message = result.getMessage();
-            log.error(">>>>>>>>>>>查询商户余额参数校验失败,code = {},message = {}>>>>>>>>>>>",code,message);
+            log.error(">>>>>>>>>>>商户参数校验失败,code = {},message = {}>>>>>>>>>>>",code,message);
             return result;
         }
-        //获取配置签名
+        //签名验签
         result = verifySign(request);
         if(!result.isSuccess()){
             String code = result.getCode();
             String message = result.getMessage();
-            log.error(">>>>>>>>>>>查询商户余额签名验证失败,code = {},message = {}>>>>>>>>>>>",code,message);
+            log.error(">>>>>>>>>>>商户签名验证失败,code = {},message = {}>>>>>>>>>>>",code,message);
             return Result.fail(code,message);
         }
+        //风控检测
         result = checkRisk(request);
         if(!result.isSuccess()){
             String code = result.getCode();
             String message = result.getMessage();
-            log.error(">>>>>>>>>>>检测商户风控证失败,code = {},message = {}>>>>>>>>>>>",code,message);
+            log.error(">>>>>>>>>>>商户风控检测失败,code = {},message = {}>>>>>>>>>>>",code,message);
             return Result.fail(code,message);
         }
 
-        //渠道选择,然后执行
+        //渠道选择以及订单入库
         result = channelSelection(request);
         String code = result.getCode();
         String message = result.getMessage();
@@ -61,7 +62,7 @@ public abstract class BaseTransService<T extends PaymentRequest,R extends BaseRe
      * @param request
      * @return
      */
-    protected  abstract Result checkPaymentParams(T request);
+    protected  abstract Result verifyParams(T request);
 
     /**
      * 签名验证

@@ -19,7 +19,7 @@ public class PaymentServiceImpl extends BaseTransService<PaymentRequest, Payment
     }
 
     @Override
-    protected Result checkPaymentParams(PaymentRequest request) {
+    protected Result verifyParams(PaymentRequest request) {
         return null;
     }
 
@@ -35,6 +35,6 @@ public class PaymentServiceImpl extends BaseTransService<PaymentRequest, Payment
 
     @Override
     public Result<PaymentResponse> payment(PaymentRequest paymentRequest) {
-        return process(paymentRequest);
+        return null;
     }
 }
