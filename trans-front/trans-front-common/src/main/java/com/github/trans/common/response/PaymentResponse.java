@@ -1,6 +1,6 @@
 package com.github.trans.common.response;
 
-import com.github.chain.trans.common.annotation.Signature;
+import com.github.trans.common.annotation.Signature;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

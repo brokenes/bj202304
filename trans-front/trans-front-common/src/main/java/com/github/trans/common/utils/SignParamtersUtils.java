@@ -1,6 +1,7 @@
 package com.github.trans.common.utils;
 
-import com.github.chain.trans.common.annotation.Signature;
+
+import com.github.trans.common.annotation.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
